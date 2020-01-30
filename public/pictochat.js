@@ -1,11 +1,14 @@
 let socket;
 
 function setup() {
-    createCanvas(200, 200);
+    createCanvas(windowWidth, windowHeight);
     background(51);
 
     socket = io.connect('http://localhost:3000');
-    socket.on('mouse', socketDragged);
+    socket.on('connect', () => {
+        socket.emit('join_room', "room_name");
+        socket.on('mouse', socketDragged);
+    })
 }
 
 function socketDragged(data) {
@@ -20,7 +23,7 @@ function mouseDragged() {
         y: mouseY
     };
 
-    socket.emit('mouse', data);
+    socket.emit('mouse', { data, roomName: "room_name" });
 
     noStroke();
     fill(255);
